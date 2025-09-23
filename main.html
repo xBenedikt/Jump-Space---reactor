@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jump Space Power Grid</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .generator-sections {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .generator-section h2 {
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .generator-section {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .generator-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            white-space: nowrap; /* Verhindert Zeilenumbruch */
+        }
+        .generator-option select {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .generator-option span {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jump Space Power Grid</h1>
+    
+    <div class="power-grid-container">
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const gridContainer = document.querySelector('.power-grid-container');
+                for (let row = 1; row <= 8; row++) {
+                    for (let col = 1; col <= 8; col++) {
+                        const tile = document.createElement('div');
+                        tile.id = `tile-${row}-${col}`;
+                        tile.className = 'tile gray-tile';
+                        gridContainer.appendChild(tile);
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <div class="generator-sections">
+        <div class="generator-section">
+            <h2>Main Reactor</h2>
+            <div class="generator-option">
+                <span>Split Reactor</span>
+                <select id="main-reactor-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="split-reactor-mk1">Mk 1</option>
+                    <option value="split-reactor-mk2">Mk 2</option>
+                    <option value="split-reactor-mk3">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Fusion Reactor</span>
+                <select id="fusion-reactor-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="fusion-reactor-mk1">Mk 1</option>
+                    <option value="fusion-reactor-mk2">Mk 2</option>
+                    <option value="fusion-reactor-mk3">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Graviton Reactor</span>
+                <select id="graviton-reactor-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="graviton-reactor-mk1">Mk 1</option>
+                    <option value="graviton-reactor-mk2">Mk 2</option>
+                    <option value="graviton-reactor-mk3">Mk 3</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="generator-section">
+            <h2>Auxiliary Generator A</h2>
+            <div class="generator-option">
+                <span>Bio Fission</span>
+                <select id="aux-a-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="bio-fission-mk1">Mk 1</option>
+                    <option value="bio-fission-mk2">Mk 2</option>
+                    <option value="bio-fission-mk3">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Warp Core</span>
+                <select id="warp-core-a-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="warp-core-a-mk1">Mk 1</option>
+                    <option value="warp-core-a-mk2">Mk 2</option>
+                    <option value="warp-core-a-mk3">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Ionizer</span>
+                <select id="ionizer-a-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="ionizer-a-mk1">Mk 1</option>
+                    <option value="ionizer-a-mk2">Mk 2</option>
+                    <option value="ionizer-a-mk3">Mk 3</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="generator-section">
+            <h2>Auxiliary Generator B</h2>
+            <div class="generator-option">
+                <span>Bio Fission</span>
+                <select id="aux-b-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="bio-fission-mk1-b">Mk 1</option>
+                    <option value="bio-fission-mk2-b">Mk 2</option>
+                    <option value="bio-fission-mk3-b">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Warp Core</span>
+                <select id="warp-core-b-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="warp-core-b-mk1">Mk 1</option>
+                    <option value="warp-core-b-mk2">Mk 2</option>
+                    <option value="warp-core-b-mk3">Mk 3</option>
+                </select>
+            </div>
+            <div class="generator-option">
+                <span>Ionizer</span>
+                <select id="ionizer-b-selector">
+                    <option value="none">Select Mk</option>
+                    <option value="ionizer-b-mk1">Mk 1</option>
+                    <option value="ionizer-b-mk2">Mk 2</option>
+                    <option value="ionizer-b-mk3">Mk 3</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
