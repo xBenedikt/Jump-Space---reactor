@@ -1,16 +1,44 @@
 // script.js
 
-// Wähle alle Dropdown-Menüs aus
-const mainReactorSelector = document.getElementById('main-reactor-selector');
-const auxASelector = document.getElementById('aux-a-selector');
-const auxBSelector = document.getElementById('aux-b-selector');
+// Wähle alle Dropdown-Menüs für die Generatorbereiche aus
+const mainReactorDropdowns = [
+    document.getElementById('split-reactor-selector'),
+    document.getElementById('solid-state-reactor-selector'),
+    document.getElementById('null-wave-reactor-selector'),
+    document.getElementById('materia-scatter-reactor-selector')
+];
+const auxADropdowns = [
+    document.getElementById('aux-a-selector'),
+    document.getElementById('null-tension-a-selector'),
+    document.getElementById('unknown-a-selector')
+];
+const auxBDropdowns = [
+    document.getElementById('aux-b-selector'),
+    document.getElementById('null-tension-b-selector'),
+    document.getElementById('unknown-b-selector')
+];
 
-// Ein Objekt, um die aktuell ausgewählten Generatoren zu verfolgen
-const selectedGenerators = {
-    'main': 'none',
-    'aux-a': 'none',
-    'aux-b': 'none'
-};
+
+// Funktion, die für einen Bereich den aktiven Wert (außer 'none') zurückgibt
+function getActiveDropdownValue(dropdowns) {
+    for (const dd of dropdowns) {
+        if (dd.value && dd.value !== 'none') {
+            return dd.value;
+        }
+    }
+    return 'none';
+}
+
+
+
+// Setzt alle anderen Dropdowns im Bereich auf 'none', ohne Events auszulösen
+function setOtherDropdownsNoneNoEvent(dropdowns, activeDropdown) {
+    dropdowns.forEach(dd => {
+        if (dd !== activeDropdown && dd.value !== 'none') {
+            dd.value = 'none';
+        }
+    });
+}
 
 /**
  * Aktualisiert das Power Grid basierend auf den aktivierten Kacheln.
@@ -50,10 +78,19 @@ function updateGrid(greenTiles, blueTiles) {
 const generatorPatterns = {
     'none': { green: [], blue: [] }, // Basis-Muster für "nicht ausgewählt"
     
-    // Muster für Main Reactor
-    'split-reactor-mk1': { green: [], blue: [] },
-    'split-reactor-mk2': { green: [], blue: [] },
-    'split-reactor-mk3': { 
+    //// Muster für Main Reactor
+
+    //Split Reactor
+    'split-reactor-mk1': { 
+        green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-7', 'tile-1-8', 
+            'tile-2-1', 'tile-2-2', 'tile-2-3', 'tile-2-6', 'tile-2-7', 'tile-2-8', 
+            'tile-3-1', 'tile-3-2', 'tile-3-3', 'tile-3-6', 'tile-3-7', 'tile-3-8',
+            'tile-4-1', 'tile-4-2', 'tile-4-3', 'tile-4-6', 'tile-4-7', 'tile-4-8'
+        ],
+        blue: []
+    },
+    'split-reactor-mk2': { 
         green: [
             'tile-1-1', 'tile-1-2', 'tile-1-7', 'tile-1-8', 
             'tile-2-1', 'tile-2-2', 'tile-2-3', 'tile-2-6', 'tile-2-7', 'tile-2-8', 
@@ -61,13 +98,143 @@ const generatorPatterns = {
             'tile-4-2', 'tile-4-3', 'tile-4-6', 'tile-4-7'
         ],
         blue: [
-            'tile-3-1', 'tile-3-8', 'tile-4-1', 'tile-4-8'
+            'tile-3-1', 'tile-3-8', 
+            'tile-4-1', 'tile-4-8'
+        ]
+    },
+    'split-reactor-mk3': { 
+        green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-7', 'tile-1-8', 
+            'tile-2-1', 'tile-2-2', 'tile-2-3', 'tile-2-6', 'tile-2-7', 'tile-2-8', 
+            'tile-3-3', 'tile-3-6',  
+            'tile-4-3', 'tile-4-6', 
+        ],
+        blue: [
+            'tile-3-1', 'tile-3-2', 'tile-3-8', 'tile-3-7', 
+            'tile-4-1', 'tile-4-2', 'tile-4-7', 'tile-4-8'
         ]
     },
 
-    // Muster für AUX A
-    'bio-fission-mk1': { green: [], blue: [] },
-    'bio-fission-mk2': { green: [], blue: [] },
+    //Solid State Reactor
+    'solid-state-reactor-mk1': { 
+        green: [
+            'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6',
+            'tile-2-3', 'tile-2-4', 'tile-2-5', 'tile-2-6',
+        ], 
+        blue: [
+            'tile-3-3', 'tile-3-4', 'tile-3-5', 'tile-3-6',
+            'tile-4-3', 'tile-4-4', 'tile-4-5', 'tile-4-6'
+        ] 
+    },
+    'solid-state-reactor-mk2': {  green: [
+            'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6',
+        ], 
+        blue: [
+            'tile-2-3', 'tile-2-4', 'tile-2-5', 'tile-2-6',
+            'tile-3-3', 'tile-3-4', 'tile-3-5', 'tile-3-6',
+            'tile-4-3', 'tile-4-4', 'tile-4-5', 'tile-4-6'
+        ] 
+    },
+    'solid-state-reactor-mk3': {
+        green: [],
+        blue: [
+            'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6',
+            'tile-2-3', 'tile-2-4', 'tile-2-5', 'tile-2-6',
+            'tile-3-3', 'tile-3-4', 'tile-3-5', 'tile-3-6',
+            'tile-4-3', 'tile-4-4', 'tile-4-5', 'tile-4-6'
+        ]
+    },
+
+    // Null Wave Reactor
+    'null-wave-reactor-mk1': {
+         green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-7', 'tile-1-8',
+            'tile-2-1', 'tile-2-2', 'tile-2-3', 'tile-2-6', 'tile-2-7','tile-2-8',
+            'tile-3-4', 'tile-3-5',
+            'tile-4-4', 'tile-4-5',
+        ],
+        blue: [
+            'tile-3-2', 'tile-3-3', 'tile-3-6', 'tile-3-7',
+            'tile-4-3', 'tile-4-6'
+        ]
+    },
+    'null-wave-reactor-mk2': {
+        green: [
+            'tile-1-2', 'tile-1-7',
+            'tile-2-2', 'tile-2-3', 'tile-2-6', 'tile-2-7',
+            'tile-3-4', 'tile-3-5',
+            'tile-4-4', 'tile-4-5',
+        ],
+        blue: [
+            'tile-1-1', 'tile-1-8',
+            'tile-2-1', 'tile-2-8',
+            'tile-3-2', 'tile-3-3', 'tile-3-6', 'tile-3-7',
+            'tile-4-3', 'tile-4-6'
+        ]
+    },
+    'null-wave-reactor-mk3': { green: [
+            'tile-2-3', 'tile-2-6',
+            'tile-3-4', 'tile-3-5',
+            'tile-4-4', 'tile-4-5',
+        ],
+        blue: [
+            'tile-1-1', 'tile-1-2', 'tile-1-7', 'tile-1-8',
+            'tile-2-1', 'tile-2-2', 'tile-2-7', 'tile-2-8',
+            'tile-3-2', 'tile-3-3', 'tile-3-6', 'tile-3-7',
+            'tile-4-3', 'tile-4-6'
+        ]
+     },
+
+    // Materia Scatter Reactor
+    'materia-scatter-reactor-mk1': {
+        green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6', 'tile-1-7', 'tile-1-8',
+            'tile-2-2', 'tile-2-4', 'tile-2-5', 'tile-2-7', 
+            'tile-3-1', 'tile-3-2', 'tile-3-3', 'tile-3-4', 'tile-3-5', 'tile-3-6', 'tile-3-7', 'tile-3-8',
+        ], 
+        blue: [
+             'tile-4-1', 'tile-4-3', 'tile-4-6','tile-4-8'
+        ]
+    },
+    'materia-scatter-reactor-mk2': {
+        green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6', 'tile-1-7', 'tile-1-8',
+            'tile-2-2', 'tile-2-4', 'tile-2-5', 'tile-2-7', 
+            'tile-3-1', 'tile-3-4', 'tile-3-5', 'tile-3-8',
+        ], 
+        blue: [
+            
+             'tile-3-2', 'tile-3-3', 'tile-3-6', 'tile-3-7',
+             'tile-4-1', 'tile-4-3', 'tile-4-6','tile-4-8'
+        ]
+    },
+    'materia-scatter-reactor-mk3': { green: [
+            'tile-1-1', 'tile-1-2', 'tile-1-3', 'tile-1-4', 'tile-1-5', 'tile-1-6', 'tile-1-7', 'tile-1-8',
+            'tile-2-4', 'tile-2-5'
+        ], 
+        blue: [
+            'tile-2-2', 'tile-2-7',
+            'tile-3-1', 'tile-3-2', 'tile-3-3', 'tile-3-4', 'tile-3-5', 'tile-3-6', 'tile-3-7', 'tile-3-8',
+            'tile-4-1', 'tile-4-3', 'tile-4-6','tile-4-8'
+        ] 
+},
+
+    //// Muster für AUX A
+    'bio-fission-mk1': {  
+        green: [
+            'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6',
+            'tile-6-3', 'tile-6-6'
+        ],
+        blue: []
+    },
+    'bio-fission-mk2': {
+        green: [
+            'tile-5-2', 'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6', 'tile-5-7',
+        ],
+        blue: [
+            'tile-6-2', 'tile-6-7'
+        ]
+    },
     'bio-fission-mk3': { 
         green: [
             'tile-5-2', 'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6', 'tile-5-7'
@@ -78,8 +245,21 @@ const generatorPatterns = {
     },
 
     // Muster für AUX B
-    'bio-fission-mk1-b': { green: [], blue: [] },
-    'bio-fission-mk2-b': { green: [], blue: [] },
+    'bio-fission-mk1-b': {  
+        green: [
+            'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6',
+            'tile-8-3', 'tile-8-6'
+        ],
+        blue: []
+    },
+    'bio-fission-mk2-b': {
+        green: [
+            'tile-7-2', 'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6', 'tile-7-7',
+        ],
+        blue: [
+            'tile-8-2', 'tile-8-7'
+        ]
+    },
     'bio-fission-mk3-b': {
         green: [
             'tile-7-2', 'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6', 'tile-7-7'
@@ -96,34 +276,41 @@ const generatorPatterns = {
 function renderCombinedGrid() {
     const allGreenTiles = new Set();
     const allBlueTiles = new Set();
-    
-    // Iteriere durch alle ausgewählten Generatoren und sammle ihre Kacheln
-    for (const type in selectedGenerators) {
-        const selectedValue = selectedGenerators[type];
+
+    // Ermittle den aktiven Wert für jeden Bereich
+    const mainValue = getActiveDropdownValue(mainReactorDropdowns);
+    const auxAValue = getActiveDropdownValue(auxADropdowns);
+    const auxBValue = getActiveDropdownValue(auxBDropdowns);
+
+    [mainValue, auxAValue, auxBValue].forEach(selectedValue => {
         const pattern = generatorPatterns[selectedValue];
-        
         if (pattern) {
             pattern.green.forEach(tile => allGreenTiles.add(tile));
             pattern.blue.forEach(tile => allBlueTiles.add(tile));
         }
-    }
-    
-    // Die finale Liste der Kacheln an die Update-Funktion übergeben
+    });
+
     updateGrid(Array.from(allGreenTiles), Array.from(allBlueTiles));
 }
 
-// Event-Listener für jedes Dropdown-Menü
-mainReactorSelector.addEventListener('change', (event) => {
-    selectedGenerators.main = event.target.value;
-    renderCombinedGrid();
-});
+// Event-Listener für alle Dropdowns im jeweiligen Bereich
 
-auxASelector.addEventListener('change', (event) => {
-    selectedGenerators['aux-a'] = event.target.value;
-    renderCombinedGrid();
-});
 
-auxBSelector.addEventListener('change', (event) => {
-    selectedGenerators['aux-b'] = event.target.value;
-    renderCombinedGrid();
+mainReactorDropdowns.forEach(dropdown => {
+    dropdown.addEventListener('change', (event) => {
+        setOtherDropdownsNoneNoEvent(mainReactorDropdowns, dropdown);
+        renderCombinedGrid();
+    });
+});
+auxADropdowns.forEach(dropdown => {
+    dropdown.addEventListener('change', (event) => {
+        setOtherDropdownsNoneNoEvent(auxADropdowns, dropdown);
+        renderCombinedGrid();
+    });
+});
+auxBDropdowns.forEach(dropdown => {
+    dropdown.addEventListener('change', (event) => {
+        setOtherDropdownsNoneNoEvent(auxBDropdowns, dropdown);
+        renderCombinedGrid();
+    });
 });
