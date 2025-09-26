@@ -1,6 +1,6 @@
 // script.js
 
-// Wähle alle Dropdown-Menüs für die Generatorbereiche aus
+// Select all dropdown menus for the generator sections
 const mainReactorDropdowns = [
     document.getElementById('split-reactor-selector'),
     document.getElementById('solid-state-reactor-selector'),
@@ -10,16 +10,15 @@ const mainReactorDropdowns = [
 const auxADropdowns = [
     document.getElementById('aux-a-selector'),
     document.getElementById('null-tension-a-selector'),
-    document.getElementById('unknown-a-selector')
+    document.getElementById('materia-shift-a-selector')
 ];
 const auxBDropdowns = [
     document.getElementById('aux-b-selector'),
     document.getElementById('null-tension-b-selector'),
-    document.getElementById('unknown-b-selector')
+    document.getElementById('materia-shift-b-selector')
 ];
 
-
-// Funktion, die für einen Bereich den aktiven Wert (außer 'none') zurückgibt
+// Returns the active value (except 'none') for a section
 function getActiveDropdownValue(dropdowns) {
     for (const dd of dropdowns) {
         if (dd.value && dd.value !== 'none') {
@@ -29,9 +28,7 @@ function getActiveDropdownValue(dropdowns) {
     return 'none';
 }
 
-
-
-// Setzt alle anderen Dropdowns im Bereich auf 'none', ohne Events auszulösen
+// Sets all other dropdowns in the section to 'none' without triggering events
 function setOtherDropdownsNoneNoEvent(dropdowns, activeDropdown) {
     dropdowns.forEach(dd => {
         if (dd !== activeDropdown && dd.value !== 'none') {
@@ -41,21 +38,22 @@ function setOtherDropdownsNoneNoEvent(dropdowns, activeDropdown) {
 }
 
 /**
- * Aktualisiert das Power Grid basierend auf den aktivierten Kacheln.
- * @param {string[]} greenTiles Ein Array von IDs für Kacheln, die grün leuchten sollen.
- * @param {string[]} blueTiles Ein Array von IDs für Kacheln, die blau leuchten sollen.
+ * Updates the power grid based on the activated tiles.
+ * @param {string[]} greenTiles Array of IDs for tiles that should be green.
+ * @param {string[]} blueTiles Array of IDs for tiles that should be blue.
  */
 function updateGrid(greenTiles, blueTiles) {
-    // Schritt 1: Das gesamte Gitter leeren
-    document.querySelectorAll('.tile').forEach(tile => {
-        tile.classList.remove('green-tile', 'blue-tile');
+    // Only update tiles in the main grid
+    document.querySelectorAll('#power-grid-container .tile').forEach(tile => {
+        tile.classList.remove('green-tile', 'blue-tile', 'module-powered', 'module-unpowered');
         tile.classList.add('gray-tile');
         tile.style.boxShadow = 'none';
+        tile.style.border = '';
     });
 
-    // Schritt 2: Die neuen grünen Kacheln färben
+    // Step 2: Color the new green tiles
     greenTiles.forEach(tileId => {
-        const tile = document.getElementById(tileId);
+        const tile = document.querySelector(`#power-grid-container #${tileId}`);
         if (tile) {
             tile.classList.remove('gray-tile');
             tile.classList.add('green-tile');
@@ -63,9 +61,9 @@ function updateGrid(greenTiles, blueTiles) {
         }
     });
 
-    // Schritt 3: Die neuen blauen Kacheln färben
+    // Step 3: Color the new blue tiles
     blueTiles.forEach(tileId => {
-        const tile = document.getElementById(tileId);
+        const tile = document.querySelector(`#power-grid-container #${tileId}`);
         if (tile) {
             tile.classList.remove('gray-tile');
             tile.classList.add('blue-tile');
@@ -74,11 +72,11 @@ function updateGrid(greenTiles, blueTiles) {
     });
 }
 
-// Zentrale Speicherung aller Generatormuster
+// Central storage for all generator patterns
 const generatorPatterns = {
-    'none': { green: [], blue: [] }, // Basis-Muster für "nicht ausgewählt"
+    'none': { green: [], blue: [] }, // Base pattern for "not selected"
     
-    //// Muster für Main Reactor
+    //// Patterns for Main Reactor
 
     //Split Reactor
     'split-reactor-mk1': { 
@@ -219,7 +217,9 @@ const generatorPatterns = {
         ] 
 },
 
-    //// Muster für AUX A
+    //// Patterns for AUX A
+
+    // Bio Fission
     'bio-fission-mk1': {  
         green: [
             'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6',
@@ -243,8 +243,62 @@ const generatorPatterns = {
             'tile-5-1', 'tile-5-8', 'tile-6-1', 'tile-6-8'
         ]
     },
+    // Null Tension 
+    'null-tension-mk1' : {
+        green: [
+            'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6',
+            'tile-6-3', 'tile-6-4', 'tile-6-5', 'tile-6-6'
+        ],
+        blue: []
+    },
+    'null-tension-mk2' : {
+        green: [
+            'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6',
+            'tile-6-4', 'tile-6-5'
+        ],
+        blue: [
+            'tile-6-3', 'tile-6-6'
+        ]
+    },
+    'null-tension-mk3' : {
+        green: [
+            'tile-5-3', 'tile-5-4', 'tile-5-5', 'tile-5-6',
+        ],
+        blue: [
+            'tile-6-3', 'tile-6-4', 'tile-6-5', 'tile-6-6'
+        ]
+    },
 
-    // Muster für AUX B
+    'materia-shift-mk1': {
+        green: [
+            'tile-5-2', 'tile-5-3', 'tile-5-6', 'tile-5-7',
+            'tile-6-2', 'tile-6-3', 'tile-6-6', 'tile-6-7'
+        ],
+        blue: []
+    },
+    'materia-shift-mk2': {
+        green: [
+            'tile-5-2', 'tile-5-3', 'tile-5-6', 'tile-5-7',
+            'tile-6-3', 'tile-6-6'
+        ],
+        blue: [
+            'tile-5-3', 'tile-5-6', 
+            'tile-6-2', 'tile-6-7'
+        ]
+    },
+    'materia-shift-mk3': {
+        green: [
+            'tile-5-2', 'tile-5-7',
+        ],
+        blue: [
+            'tile-5-3', 'tile-5-6',
+            'tile-6-2', 'tile-6-3', 'tile-6-6', 'tile-6-7'
+        ]
+    },
+
+    //// Patterns for AUX B
+
+    //Bio Fission
     'bio-fission-mk1-b': {  
         green: [
             'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6',
@@ -267,21 +321,93 @@ const generatorPatterns = {
         blue: [
             'tile-7-1', 'tile-7-8', 'tile-8-1', 'tile-8-8'
         ]
+    },
+    // Null Tension AUX B
+    'null-tension-mk1-b': {
+        green: [
+            'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6',
+            'tile-8-3', 'tile-8-4', 'tile-8-5', 'tile-8-6'
+        ],
+        blue: []
+    },
+    'null-tension-mk2-b': {
+        green: [
+            'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6',
+            'tile-8-4', 'tile-8-5'
+        ],
+        blue: [
+            'tile-8-3', 'tile-8-6'
+        ]
+    },
+    'null-tension-mk3-b': {
+        green: [
+            'tile-7-3', 'tile-7-4', 'tile-7-5', 'tile-7-6'
+        ],
+        blue: [
+            'tile-8-3', 'tile-8-4', 'tile-8-5', 'tile-8-6'
+        ]
+    },
+
+    // Materia Shift AUX B
+    'materia-shift-mk1-b': {
+        green: [
+            'tile-7-2', 'tile-7-3', 'tile-7-6', 'tile-7-7',
+            'tile-8-2', 'tile-8-3', 'tile-8-6', 'tile-8-7'
+        ],
+        blue: []
+    },
+    'materia-shift-mk2-b': {
+        green: [
+            'tile-7-2', 'tile-7-3', 'tile-7-6', 'tile-7-7',
+            'tile-8-3', 'tile-8-6'
+        ],
+        blue: [
+            'tile-7-3', 'tile-7-6',
+            'tile-8-2', 'tile-8-7'
+        ]
+    },
+    'materia-shift-mk3-b': {
+        green: [
+            'tile-7-2', 'tile-7-7'
+        ],
+        blue: [
+            'tile-7-3', 'tile-7-6',
+            'tile-8-2', 'tile-8-3', 'tile-8-6', 'tile-8-7'
+        ]
     }
 };
 
-/**
- * Kombiniert die Muster aller ausgewählten Generatoren und zeichnet das Gitter neu.
- */
+
+// Initialize the power grid (8x8)
+function renderPowerGrid() {
+    const container = document.getElementById('power-grid-container');
+    container.innerHTML = '';
+    for (let row = 1; row <= 8; row++) {
+        for (let col = 1; col <= 8; col++) {
+            const tile = document.createElement('div');
+            tile.id = `tile-${row}-${col}`;
+            tile.className = 'tile power-plug-tile'; // Only use CSS for visual
+            // Remove plug icon, use empty innerHTML
+            tile.innerHTML = '';
+            container.appendChild(tile);
+        }
+    }
+}
+
+// Initialization on page load
+window.addEventListener('DOMContentLoaded', () => {
+    renderPowerGrid();
+    renderCombinedGrid(); // Generator logic remains
+});
+
+
+ // Combines the patterns of all selected generators and redraws the grid
 function renderCombinedGrid() {
     const allGreenTiles = new Set();
     const allBlueTiles = new Set();
-
-    // Ermittle den aktiven Wert für jeden Bereich
     const mainValue = getActiveDropdownValue(mainReactorDropdowns);
     const auxAValue = getActiveDropdownValue(auxADropdowns);
     const auxBValue = getActiveDropdownValue(auxBDropdowns);
-
     [mainValue, auxAValue, auxBValue].forEach(selectedValue => {
         const pattern = generatorPatterns[selectedValue];
         if (pattern) {
@@ -289,13 +415,10 @@ function renderCombinedGrid() {
             pattern.blue.forEach(tile => allBlueTiles.add(tile));
         }
     });
-
     updateGrid(Array.from(allGreenTiles), Array.from(allBlueTiles));
 }
 
-// Event-Listener für alle Dropdowns im jeweiligen Bereich
-
-
+// Event listeners for all dropdowns in each section
 mainReactorDropdowns.forEach(dropdown => {
     dropdown.addEventListener('change', (event) => {
         setOtherDropdownsNoneNoEvent(mainReactorDropdowns, dropdown);

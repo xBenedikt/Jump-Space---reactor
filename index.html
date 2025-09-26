@@ -13,13 +13,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
         }
         h1 {
             color: #fff;
             margin-bottom: 20px;
+        }
+        h2 {
+            color: #fff;
+            margin-bottom: 10px;
         }
         .generator-sections {
             display: flex;
@@ -44,7 +48,7 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            white-space: nowrap; /* Verhindert Zeilenumbruch */
+            white-space: nowrap; /* Prevents line break */
         }
         .generator-option select {
             padding: 8px 16px;
@@ -58,28 +62,89 @@
         .generator-option span {
             font-size: 14px;
         }
+        .module-powered {
+            border: 2px solid #ff0 !important;
+        }
+        .module-unpowered {
+            border: 2px solid #f00 !important;
+        }
+        #engine-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        #engine-select {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        #rotate-engine-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #power-grid-container {
+            display: grid;
+            grid-template-columns: repeat(8, 32px);
+            grid-template-rows: repeat(8, 32px);
+            gap: 2px;
+            background: #222;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin-bottom: 8px;
+        }
+        /* Main Power Grid tiles */
+        #power-grid-container .tile {
+            background: #222;
+            border: 1px solid #444;
+        }
+        .tile {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border 0.2s;
+        }
+        .module-preview {
+            background: #666;
+            opacity: 0.7;
+        }
+        #module-list-container {
+            margin-top: 16px;
+        }
+        .green-tile {
+            background-color: #00ff00 !important;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .blue-tile {
+            background-color: #0080ff !important;
+            box-shadow: 0 0 10px #0000ff;
+        }
+        .gray-tile {
+            background-color: #222 !important;
+        }
     </style>
 </head>
 <body>
     <h1>Jump Space Power Grid</h1>
-    
-    <div class="power-grid-container">
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const gridContainer = document.querySelector('.power-grid-container');
-                for (let row = 1; row <= 8; row++) {
-                    for (let col = 1; col <= 8; col++) {
-                        const tile = document.createElement('div');
-                        tile.id = `tile-${row}-${col}`;
-                        tile.className = 'tile gray-tile';
-                        gridContainer.appendChild(tile);
-                    }
-                }
-            });
-        </script>
+    <div id="engine-selector-container"></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start; margin-bottom: 24px;">
+        <div>
+            <h2>Power Grid</h2>
+            <div id="power-grid-container"></div>
+        </div>
     </div>
 
-    <div class="generator-sections">
+    <!-- Move generator sections below the grid -->
+    <div class="generator-sections" style="margin-top: 32px;">
         <div class="generator-section">
             <h2>Main Reactor</h2>
             <div class="generator-option">
@@ -135,18 +200,18 @@
                 <span>Null Tension</span>
                 <select id="null-tension-a-selector">
                     <option value="none">Select Mk</option>
-                    <option value="null-tension-a-mk1">Mk 1</option>
-                    <option value="null-tension-a-mk2">Mk 2</option>
-                    <option value="null-tension-a-mk3">Mk 3</option>
+                    <option value="null-tension-mk1">Mk 1</option>
+                    <option value="null-tension-mk2">Mk 2</option>
+                    <option value="null-tension-mk3">Mk 3</option>
                 </select>
             </div>
             <div class="generator-option">
-                <span>Unkown</span>
-                <select id="unknown-a-selector">
+                <span>Materia Shift</span>
+                <select id="materia-shift-a-selector">
                     <option value="none">Select Mk</option>
-                    <option value="unkown-a-mk1">Mk 1</option>
-                    <option value="unkown-a-mk2">Mk 2</option>
-                    <option value="unknown-a-mk3">Mk 3</option>
+                    <option value="materia-shift-mk1">Mk 1</option>
+                    <option value="materia-shift-mk2">Mk 2</option>
+                    <option value="materia-shift-mk3">Mk 3</option>
                 </select>
             </div>
         </div>
@@ -166,18 +231,18 @@
                 <span>Null Tension</span>
                 <select id="null-tension-b-selector">
                     <option value="none">Select Mk</option>
-                    <option value="null-tension-b-mk1">Mk 1</option>
-                    <option value="null-tension-b-mk2">Mk 2</option>
-                    <option value="null-tension-b-mk3">Mk 3</option>
+                    <option value="null-tension-mk1-b">Mk 1</option>
+                    <option value="null-tension-mk2-b">Mk 2</option>
+                    <option value="null-tension-mk3-b">Mk 3</option>
                 </select>
             </div>
             <div class="generator-option">
-                <span>Unknown</span>
-                <select id="unknown-b-selector">
+                <span>Materia Shift</span>
+                <select id="materia-shift-b-selector">
                     <option value="none">Select Mk</option>
-                    <option value="unknown-b-mk1">Mk 1</option>
-                    <option value="unknown-b-mk2">Mk 2</option>
-                    <option value="unknown-b-mk3">Mk 3</option>
+                    <option value="materia-shift-mk1-b">Mk 1</option>
+                    <option value="materia-shift-mk2-b">Mk 2</option>
+                    <option value="materia-shift-mk3-b">Mk 3</option>
                 </select>
             </div>
         </div>
