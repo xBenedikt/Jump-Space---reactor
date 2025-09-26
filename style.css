@@ -148,3 +148,30 @@ h2 {
     transform: translate(-50%, -50%);
     box-shadow: 0 1px 2px #0001;
 }
+footer.site-footer {
+    margin-top: 32px;
+    color: #aaa;
+    font-size: 15px;
+    text-align: center;
+    background: #222;
+    border-top: 1px solid #333;
+    padding: 12px 8px 8px 8px;
+    border-radius: 0;
+    box-shadow: none;
+}
+footer.site-footer a {
+    color: #8cf;
+    transition: color 0.2s;
+}
+footer.site-footer a:hover {
+    color: #fff;
+}
+footer.site-footer hr {
+    margin: 12px 0;
+    border: none;
+    border-top: 1px solid #333;
+}
+footer.site-footer strong {
+    color: #fff;
+    font-weight: 600;
+}
